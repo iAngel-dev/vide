@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test TryAngel API</title>
+</head>
+<body>
+    <h2>Parler à TryAngel</h2>
+    <label for="user_id">ID Utilisateur :</label>
+    <input type="text" id="user_id" value="felix_test"><br><br>
+
+    <label for="message">Message :</label><br>
+    <textarea id="message" rows="4" cols="50">Bonjour TryAngel</textarea><br><br>
+
+    <button onclick="envoyer()">Envoyer</button>
+
+    <h3>Réponse :</h3>
+    <pre id="reponse"></pre>
+
+    <audio id="audioPlayer" controls style="display:none;"></audio>
+
+    <script>
+        function envoyer() {
+            const user_id = document.getElementById("user_id").value;
+            const message = document.getElementById("message").value;
+
+            fetch("http://127.0.0.1:5000/speak", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ user_id, message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("reponse").textContent = JSON.stringify(data, null, 2);
+                if (data.voice_url) {
+                    const audioPlayer = document.getElementById("audioPlayer");
+                    audioPlayer.src = data.voice_url;
+                    audioPlayer.style.display = "block";
+                    audioPlayer.play();
+                }
+            })
+            .catch(error => {
+                document.getElementById("reponse").textContent = "Erreur : " + error;
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: TryAngel
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    branch: main
+    envVars:
+      - key: DEFAULT_VOICE
+        value: "fr-FR-Wavenet-E"
+      - key: API_SECRET_KEY
+        value: "supersecretkey"
